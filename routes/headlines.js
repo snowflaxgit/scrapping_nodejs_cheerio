@@ -22,85 +22,281 @@ exports.tabs = function(req, res){
     });	*/	
 	
 	if(keyword == 'sandesh'){
+						
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				tab_url = "http://www.sandesh.com/",
+
+				//Use jQuery just as in a regular HTML page
+				$hpTop = $('.pg_news'),
+				$li = $hpTop.find('ul > li');
+					
+			$li.each(function (i, item) {
+				//I will use regular jQuery selectors
+				var $img = tab_url+$(item).children('img').attr("src"),
+					$title = $(item).children('h1').children('a').text().trim(),
+					$href = tab_url+$(item).children('h1').children('a').attr("href");
+					//$content = $(item).children('h2').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+					headlines_img : $img								
+				};
+			});
+			 res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+		});
+	}
+
+	if(keyword == 'gujaratsamachar'){	
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				$hpTop = $('.main-box56'),
+				$div = $hpTop.find('div.mr-main-box');
+					
+			$div.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $img = $(item).children('div.imgbox').children('a').children('img').attr("src"),
+					$title = $(item).children('div.viru404-hit420').children('a.mr-href-title').text().trim(),
+					$href = $(item).children('div.viru404-hit420').children('a.mr-href-title').attr('href');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+					headlines_img : $img								
+				};
+			});
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+			
+		});
+	}
+	
+	<!-- deshgujarat -->
+	if(keyword == 'deshgujarat'){	
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				$divCont = $('#content-wrap2 .content'),
+				$divPost = $divCont.find('div.post-wrap');
+					
+			$divPost.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).find('h2.title1').find('a').text().trim(),
+					$href = $(item).find('h2.title1').find('a').attr('href');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href							
+				};
+			});
+			//res.send(self.tabData);
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+			
+		});
+	}
+	<!-- deshgujarat - end -->
+	
+	<!-- TheHindu Start -->
+	if(keyword == 'TheHindu'){
+		//console.log(keyword,tabs_title,tabs_href);	
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+			var $ = cheerio.load(body);
 								
-				request({
-				  uri: tabs_href,
-				}, function(error, response, body) {
-					
-					//console.log(keyword,tabs_href);	
-					
-					var self = this;
-					self.tabData = new Array();//I feel like I want to save my results in an array
-					
-				  	//Just a basic error check
-	                if(error && response.statusCode !== 200){
-						console.log('Request error.');
-					}
+			if(tabs_href == 'http://www.thehindu.com/')
+			{
+				var $div = $('.breakingNews_list').children('h3').children('a');
+			}
+			
+			if(tabs_href == 'http://www.thehindu.com/news/')
+			{
+				var $div = $('.breakingNews_list').children('h3').children('a');
+			}
+			
+			if(tabs_href == 'http://www.thehindu.com/business/')
+			{
+				var $div = $('.headlines').children('h3').find('a');
+			}
+			
+			if(tabs_href == 'http://www.thehindu.com/sport/')
+			{
+				var $div = $('.headlines').children('h3').find('a');
+			}
+			
+			$div.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).text().trim(),
+					$href = $(item).attr('href');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+				};
+			});
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+				
+		});
+	}
+	<!-- TheHindu End -->
 
-					var $ = cheerio.load(body),			  
-				  		tab_url = "http://www.sandesh.com/",
-
-						//Use jQuery just as in a regular HTML page
-						$hpTop = $('.pg_news'),
-						$li = $hpTop.find('ul > li');
-							
-					$li.each(function (i, item) {
-						//I will use regular jQuery selectors
-						var $img = tab_url+$(item).children('img').attr("src"),
-							$title = $(item).children('h1').children('a').text().trim(),
-							$href = tab_url+$(item).children('h1').children('a').attr("href");
-							//$content = $(item).children('h2').text().trim();						
-											
-						//and add all that data to my items array
-						self.tabData[i] = {
-							keyword : keyword,
-							headlines_title : $title,
-							headlines_href : $href,
-							headlines_img : $img								
-						};
-						//console.log(self.tabData[i]);
-					});
-					 res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
-				});
+	<!-- IBNLive Start -->
+	if(keyword == 'IBNLive'){
+		//console.log(keyword,tabs_title,tabs_href);	
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+			var $ = cheerio.load(body);
+								
+			if(tabs_href == 'http://ibnlive.in.com/politics/')
+			{
+				var $div = $('.lft-wd1').children('.read-ls1').find('a');
+			}
+			
+			if(tabs_href == 'http://ibnlive.in.com/india/')
+			{
+				var $div = $('#cntnt').children('.nbox').children('h2').children('a');
+			}
+			
+			if(tabs_href == 'http://ibnlive.in.com/sports/')
+			{
+				var $div = $('.mid_left.fleft ul').children('li').children('h2').children('a');
+			}
+			
+			if(tabs_href == 'http://ibnlive.in.com/world/')
+			{
+				var $div = $('#cntnt').children('.nbox').children('h2').children('a');
+			}
+			
+			$div.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).text(),
+					$href = $(item).attr('href');
+					//$img = $(item).children('img').attr('src');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href
+					//headlines_img : $img
+				};
+				//console.log($img);
+			});
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+				
+		});
+	}
+	<!-- IBNLive End -->
+	
+	<!-- deccanherald -->
+	if(keyword == 'deccanherald'){
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
 			}
 
-			if(keyword == 'gujaratsamachar'){
-				//console.log(keyword,tabs_title,tabs_href);	
-				request({
-				  uri: tabs_href,
-				}, function(error, response, body) {
+			var $ = cheerio.load(body),			  
+				$divCont = $('div#topBlockLeft'),
+				$divPost = $divCont.find('div.newsText');
 					
-					var self = this;
-					self.tabData = new Array();//I feel like I want to save my results in an array
-					
-				  	//Just a basic error check
-	                if(error && response.statusCode !== 200){
-						console.log('Request error.');
-					}
-
-					var $ = cheerio.load(body),			  
-				  		$hpTop = $('.main-box56'),
-						$div = $hpTop.find('div.mr-main-box');
-							
-					$div.each(function (i, item) {
-						 
-						//I will use regular jQuery selectors
-						var $img = $(item).children('div.imgbox').children('a').children('img').attr("src").trim(),
-							$title = $(item).children('div.viru404-hit420').children('a.mr-href-title').text().trim(),
-							$href = $(item).children('div.viru404-hit420').children('a.mr-href-title').attr('href');
-							//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
-											
-						//and add all that data to my items array
-						self.tabData[i] = {
-							keyword : keyword,
-							headlines_title : $title,
-							headlines_href : $href,
-							headlines_img : $img								
-						};
-					});
-					res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
-					
-				});
-			}
+			$divPost.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).children('h2').children('a').text().trim(),
+					$href = $(item).children('h2').children('a').attr('href'),
+					$headlines_img = $(item).find('figure img').attr('src');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+					//console.log($headlines_img);
+				
+				if(!$headlines_img){
+					$headlines_img = '';
+				}					
+				
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+					headlines_img	: $headlines_img						
+				};
+			});
+			//res.send(self.tabData);
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+			
+		});
+	}
+	<!-- deccanherald - end -->
 	
 };

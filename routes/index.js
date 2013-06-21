@@ -25,7 +25,7 @@ var hours = 2,
 	mnt=1;
 
 // open database 
-db.open(function(err, db) {
+/*db.open(function(err, db) {
     if(!err) {
 		
 		for(var i=0;i<db_name.length;i++){
@@ -51,7 +51,7 @@ db.open(function(err, db) {
 		}
     }
 });
-
+*/
 /*
  * GET home page.
  */

@@ -18,7 +18,9 @@
 				 <label class="nav-tabs"><h4><%= item.headlines_title %></h4></label>
 				 
 				 <div style="text-align:center">
-					<img src="<%= item.headlines_img %>" />
+				 	<% if(item.headlines_img){ %> 
+						<img src="<%= item.headlines_img %>" />
+					<% } %>
 				 </div>
 				<br/>
 				 <div class="tab-content">

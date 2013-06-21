@@ -105,6 +105,196 @@ exports.headlines = function(req, res){
 				res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
 		});
 	}
+	
+	<!-- deshgujarat -->
+	if(keyword == 'deshgujarat'){
+					
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),
+				$articleClass = $('#main .content'),
+				$headlines_title = $articleClass.find('h2.title').text().trim(),
+				$headlines_date = $articleClass.find('span.meta_date').text().trim();
+				$pTag = $articleClass.find('.entry p'),
+				$articleCont = '',
+				$headlines_img = $articleClass.find('.entry p').children('img').attr('src');
+				
+				if(!$headlines_img){
+					$headlines_img = '';
+				}
+				
+			 $pTag.each(function (i, item) {
+			 
+				//I will use regular jQuery selectors
+					$articleCont += $(item).text().trim();		
+				//and add all that data to my items array
+				
+			});
+			self.headlinesData.push({
+				keyword : keyword,
+				//tabs_title : tabs_title,
+				//tabs_href : tabs_href, 
+				headlines_title : $headlines_title,
+				headlines_href : headlines_href,
+				headlines_img : $headlines_img,
+				headlines_content : $articleCont,
+				headlines_date : $headlines_date								
+			});
+			//console.log(self.headlinesData);
+			res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}
+	<!-- deshgujarat - end -->
+	
+	// english news
+	
+	<!-- TheHindu start -->
+	if(keyword == 'TheHindu'){
+		
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				$articleClass = $('#left-column');
+			
+				$articleClass.each(function (i, item) {
+					 
+					//I will use regular jQuery selectors
+					var $headlines_title = $(item).children('h1.detail-title').html(),
+						
+						//$title = $title+"&lt;br /&gt;"+ $title2 +"&lt;br /&gt;"+ $title3;
+						$articleCont = $(item).find('.article-text .body').text().trim(),
+						$headlines_img = $(item).children('.art-horizantal-colored').children('#hcenter').find('img').attr('src'),					
+						$headline_date = $(item).find('.dateline').text().trim();	
+					//and add all that data to my items array
+					self.headlinesData.push({
+						keyword : keyword,
+						headlines_title : $headlines_title,
+						headlines_href : headlines_href,
+						headlines_img : $headlines_img,
+						headlines_content : $articleCont,
+						headlines_date : $headline_date						
+					});
+					//console.log($headline_date);	
+				});
+				res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}
+	<!-- TheHindu end -->
+
+	<!-- IBNLive start -->
+	if(keyword == 'IBNLive'){
+		
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				$articleClass = $('#aright');
+			
+				$articleClass.each(function (i, item) {
+					 
+					//I will use regular jQuery selectors
+					var $headlines_title = $(item).find('h1').html(),
+						
+						//$title = $title+"&lt;br /&gt;"+ $title2 +"&lt;br /&gt;"+ $title3;
+						$articleCont = $(item).find('.acbox p').text().trim(),
+						$headlines_img = $(item).find('#photo img').attr('src'),					
+						$headline_date = $(item).find('.img_box.txtb12.fleft span').text();
+						//console.log($(item).find('.img_box.txtb12.fleft span').text());	
+					//and add all that data to my items array
+					self.headlinesData.push({
+						keyword : keyword,
+						headlines_title : $headlines_title,
+						headlines_href : headlines_href,
+						headlines_img : $headlines_img,
+						headlines_content : $articleCont,
+						headlines_date : $headline_date						
+					});
+					//console.log($headline_date);	
+				});
+				res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}
+	<!-- IBNLive end -->
+	
+	<!-- deccanherald -->
+	if(keyword == 'deccanherald'){
+					
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),
+				$articleClass = $('#main .newsText'),
+				$headlines_title = $articleClass.children('h1').text().trim(),
+				$headlines_date = $articleClass.children('.postedBy').text().trim();
+				$pTag = $articleClass.children('p:not(.gotoTop)'),
+				$articleCont = '',
+				$headlines_img = $articleClass.children('figure.floatLeftImg').children('img').attr('src');
+				
+				if(!$headlines_img){
+					$headlines_img = '';
+				}
+				
+			 $pTag.each(function (i, item) {
+			 
+				//I will use regular jQuery selectors
+					$articleCont += $(item).text().trim();		
+				//and add all that data to my items array
+				
+			});
+			self.headlinesData.push({
+				keyword : keyword,
+				//tabs_title : tabs_title,
+				//tabs_href : tabs_href, 
+				headlines_title : $headlines_title,
+				headlines_href : headlines_href,
+				headlines_img : $headlines_img,
+				headlines_content : $articleCont,
+				headlines_date : $headlines_date								
+			});
+			//console.log(self.headlinesData);
+			res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}
+	<!-- deccanherald - end -->
+
 		
 	
 };
