@@ -138,6 +138,97 @@ exports.tabs = function(req, res){
 	}
 	<!-- deshgujarat - end -->
 	
+	// hindi news
+	
+	<!-- AajTak -->
+	if(keyword == 'AajTak'){
+		
+		var main_url = "http://m.aajtak.in/";
+		
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+			
+			var $ = cheerio.load(body),
+				$table = $("table.newsListing"),
+				$tr = $table.find('tr');			
+			
+			$tr.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).children('td').children('a').text().trim(),
+					$href = main_url + $(item).children('td').children('a').attr('href');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+				};
+			});
+			//console.log(self.tabData);
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+				
+		});
+	}
+	<!-- AajTak - End -->
+	
+	<!-- BBCHindi -->
+	if(keyword == 'BBCHindi'){
+		
+		var main_url = "http://www.bbc.co.uk";
+		
+		request({
+		  uri: tabs_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+			
+			var $ = cheerio.load(body),
+				$div = $("div#blq-content"),
+				$teaserDiv = $div.find('div.g-container').children('div.teaser');			
+			
+			$teaserDiv.each(function (i, item) {
+				 
+				//I will use regular jQuery selectors
+				var $title = $(item).children('h2').children('a').text().trim(),
+					$href = main_url + $(item).children('h2').children('a').attr('href'),
+					$img = $(item).children('h2').children('a').children('img').attr('src');
+					//$content = $(item).children('div.viru404-hit420').children('div.fittext3').text().trim();						
+									
+				//and add all that data to my items array
+				self.tabData[i] = {
+					keyword : keyword,
+					headlines_title : $title,
+					headlines_href : $href,
+					headlines_img : $img
+				};
+			});
+			//console.log(self.tabData);
+			res.render('headlines', {title: 'NewsHunt - Headlines', items : self.tabData} );
+				
+		});
+	}		
+	<!-- BBCHindi - end -->
+	
+	
+	//english
+	
 	<!-- TheHindu Start -->
 	if(keyword == 'TheHindu'){
 		//console.log(keyword,tabs_title,tabs_href);	

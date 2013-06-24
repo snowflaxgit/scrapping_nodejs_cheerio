@@ -156,6 +156,83 @@ exports.headlines = function(req, res){
 	}
 	<!-- deshgujarat - end -->
 	
+	// hindi news
+	
+	<!-- AajTak -->
+	if(keyword == 'AajTak'){
+		
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),			  
+				$articleTitle = $('.secArticleTitle').text().trim(),
+				$articleTime = $('.pubTime').text().trim(),
+				$articleImage = $('.secArticleImage img').attr('src'),
+				$articleCont = $('.storyBody').text().trim();
+			
+				//and add all that data to my items array
+				self.headlinesData.push({
+					keyword : keyword,
+					headlines_title : $articleTitle,
+					headlines_href : headlines_href,
+					headlines_img : $articleImage,
+					headlines_content : $articleCont,
+					headlines_date : $articleTime						
+				});
+				//console.log($headline_date);	
+				res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}
+	<!-- AajTak - end -->
+	
+	
+	<!-- BBCHindi -->
+	if(keyword == 'BBCHindi'){		
+		request({
+		  uri: headlines_href,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.headlinesData = new Array();//I feel like I want to save my results in an array
+			
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),
+				$mainClass = $('#blq-content').find('div.g-container'),			  
+				$articleTitle = $mainClass.children('h1').text().trim(),
+				$articleTime = $mainClass.children('div.datestamp').text().trim(),datestamp
+				$articleImage = $mainClass.children('div.bodytext').children('div.module:nth-child(1)').find('img').attr('src');
+				$articleCont = $mainClass.children('div.bodytext').children('p').text().trim();	
+			
+				//and add all that data to my items array
+				self.headlinesData.push({
+					keyword : keyword,
+					headlines_title : $articleTitle,
+					headlines_href : headlines_href,
+					headlines_img : $articleImage,
+					headlines_content : $articleCont,
+					headlines_date : $articleTime						
+				});
+				//console.log(self.headlinesData);	
+				res.render('headlines_details', {title: 'NewsHunt - HeadLines Details', items : self.headlinesData} );
+		});
+	}	
+	<!-- BBCHindi - end -->
+	
+	
+	
 	// english news
 	
 	<!-- TheHindu start -->

@@ -151,6 +151,99 @@ exports.list = function(req, res){
 	} 
 	<!-- deshgujarat - end -->
 	
+	// hindi news
+	
+	<!-- AajTak -->
+	if(keyword == 'AajTak' ){
+		
+		var URI = "http://m.aajtak.in/index.jsp", // define URI first
+			keyword = keyword,
+			main_url = "http://m.aajtak.in/"; 
+
+		request({
+		  uri: URI,
+		}, function(error, response, body) {
+			
+			var self = this;
+			self.tabs = new Array();//I feel like I want to save my results in an array
+
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),
+				$ul = $('ul#navigations');
+				$li = $ul.children('li');
+					 
+			$li.each(function (i, item) {
+				var $tab = $(item).children('a').text().trim(),
+					$href = main_url + $(item).children('a').attr("href");
+					
+				//if($tab == "Home" || $tab == "News" || $tab == "Business" || $tab == "Sport"){	
+					//and add all that data to my items array
+					self.tabs.push({
+						keyword : 'AajTak',
+						uri : URI,
+						tabs_title : $tab,	
+						tabs_href: $href					
+					});
+				//}
+				
+			 });		
+			//console.log(self.tabs);
+			res.render('list', {title: 'NewsHunt - '+keyword, items : self.tabs} );
+			//getTabsData(self.tabs)
+		});
+	} 
+	<!-- AajTak - End -->
+	
+	<!-- BBCHindi -->
+	if(keyword == 'BBCHindi' ){
+		
+		var URI = "http://www.bbc.co.uk/hindi/", // define URI first
+			keyword = keyword,
+			main_url = "http://www.bbc.co.uk"; 
+
+		request({
+		  uri: URI,
+		}, function(error, response, body) {
+			//console.log(response)
+			var self = this;
+			self.tabs = new Array();//I feel like I want to save my results in an array
+
+			//Just a basic error check
+			if(error && response.statusCode !== 200){
+				console.log('Request error.');
+			}
+
+			var $ = cheerio.load(body),
+				$div = $("div#blq-local-nav"),
+				$ul = $div.children('ul'),
+				$li = $ul.find('li');
+			//console.log($ul)		 
+			$li.each(function (i, item) {
+				var $tab = $(item).children('a').text().trim(),
+					$href = main_url + $(item).children('a').attr("href");
+					
+				if($tab == "समाचार" || $tab == "भारत" || $tab == "विदेश" || $tab == "मनोरंजन" || $tab == "खेल"){	
+					//and add all that data to my items array
+					self.tabs.push({
+						keyword : 'BBCHindi',
+						uri : URI,
+						tabs_title : $tab,	
+						tabs_href: $href					
+					});
+				}
+				
+			 });		
+			//console.log(self.tabs);
+			res.render('list', {title: 'NewsHunt - '+keyword, items : self.tabs} );
+			//getTabsData(self.tabs)
+		});
+	} 
+	<!-- BBCHindi - End -->
+	
 	// english news
 	
 	<!-- TheHindu -->
